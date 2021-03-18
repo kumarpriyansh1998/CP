@@ -1,7 +1,5 @@
 package STSclass;
-import java.time.*;
 import java.util.*;
-import java.time.format.DateTimeFormatter;
 
 public class Class3 {
 
@@ -43,8 +41,8 @@ public class Class3 {
 		        }
 		      
 		    
-		        ans.add(L);
-		        ans.add(R);
+		        ans.add(L+1);
+		        ans.add(R+1);
 		        System.out.println(ans);
 		        
 		        
