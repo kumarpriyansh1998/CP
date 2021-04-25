@@ -1,0 +1,91 @@
+
+//User function Template for Java
+/*
+class Node
+{
+    int data;
+    Node next;
+    Node(int key)
+    {
+        this.data = key;
+        next = null;
+    }
+} */
+
+class Solution
+{
+    //Function to sort the given linked list using Merge Sort.
+    static Node mergeSort(Node head)
+    {
+        // add your code here
+        if(head == null || head.next == null) return head;
+        Node tail = find_tail(head);
+        return mergesort_helper(head,tail);
+       
+        
+    }
+    
+    static Node mergesort_helper(Node head,Node tail){
+        
+        if(head == tail){
+            Node temp = new Node(head.data);
+            return temp;
+        }
+        Node mid = find_mid(head,tail);
+        Node left = mergesort_helper(head,mid);
+        Node right = mergesort_helper(mid.next,tail);
+        Node pp = merge(left,right);
+        return pp;
+        
+        
+        
+        
+        
+    }
+    
+    
+    
+    static Node find_mid(Node head,Node tail){
+        if(head==null||head == tail) return head;
+        Node slow = head,fast = head;
+        while(fast!=tail && fast.next!=tail){
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        
+        return slow;
+        
+    }
+    
+    
+    static Node find_tail(Node n){
+        
+        if(n==null) return n;
+        Node temp = n;
+        while(temp.next!=null) temp = temp.next;
+        return temp;
+        
+        
+    }
+    
+
+    static Node merge(Node n1,Node n2){
+        
+        Node result = null;
+        if (n1 == null)
+            return n2;
+        if (n2 == null)
+            return n1;
+        if (n1.data <= n2.data) {
+            result = n1;
+            result.next = merge(n1.next, n2);
+        }
+        else {
+            result = n2;
+            result.next = merge(n1, n2.next);
+        }
+        return result;
+        
+        
+    }
+}
