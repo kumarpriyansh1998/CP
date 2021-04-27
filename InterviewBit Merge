@@ -1,0 +1,104 @@
+/**
+ * Definition for singly-linked list.
+ * class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     ListNode(int x) { val = x; next = null; }
+ * }
+ */
+public class Solution {
+    
+
+    public ListNode sortList(ListNode A) {
+        if(A==null || A.next==null) return A;
+        ListNode tail = get_tail(A);
+        return mergesort(A,tail);
+        
+    }
+    
+    public ListNode mergesort(ListNode head,ListNode tail){
+        if(head == tail) {
+            ListNode t = new ListNode(head.val);
+            return t;
+        }
+        ListNode mid = mid_node(head,tail);
+        ListNode n1 = mergesort(head,mid);
+        ListNode n2 = mergesort(mid.next,tail);
+        ListNode pp =  merge(n1,n2);
+        return pp;
+        
+    }
+
+    
+    
+    public ListNode get_tail(ListNode A){
+        if(A==null ||A.next==null) return A;
+        ListNode temp = A;
+        while(temp.next!=null){
+            temp = temp.next;
+        }
+        
+        return temp;
+    }
+    
+    
+    
+    
+
+    
+    public ListNode mid_node(ListNode head,ListNode tail){
+        if(head==null||head==tail) return head;
+        ListNode slow = head,fast = head;
+        
+        while(fast!=tail & fast.next!=tail){
+            slow =slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+    
+    
+    
+    public ListNode merge(ListNode A,ListNode B){
+        
+        if(A==null) return B;
+        if(B==null) return A;
+        ListNode aa = A,bb = B;
+        ListNode dummy = new ListNode(-1);
+        ListNode dd = dummy;
+        
+        if(A.val<B.val){
+            dd.next = A;
+            aa = aa.next;
+            dd = dd.next;
+        }
+        else{
+            dd.next = B;
+            bb = bb.next;
+            dd = dd.next;
+        }
+
+        while(aa!=null && bb!=null){
+            if(aa.val<bb.val){
+                dd.next = aa;
+                aa = aa.next;
+                dd = dd.next;
+            }
+             else{
+                dd.next = bb;
+                bb = bb.next;
+                dd = dd.next;
+            }
+        }
+        if(aa==null){
+            dd.next = bb;
+        }
+        else if(bb==null){
+            dd.next = aa;
+            
+        }
+        return dummy.next;
+        
+        
+    }
+}
