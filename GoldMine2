@@ -1,0 +1,63 @@
+//https://www.pepcoding.com/resources/data-structures-and-algorithms-in-java-levelup/recursion-and-backtracking/gold-mine-2-official/ojquestion
+
+
+import java.io.*;
+import java.util.*;
+
+public class Main {
+	static int max = 0;
+	
+	public static void getMaxGold(int[][] arr){
+	    ArrayList<Integer> answer = new ArrayList<>();
+	    for(int i=0;i<arr.length;i++){
+	        for(int j=0;j<arr[0].length;j++){
+	            if(is_valid(i,j,arr)==true){
+	                int ans = helper(0,i,j,arr);
+	                answer.add(ans);
+	            }
+	        }
+	    }
+	    for(int ele:answer){
+	        max = Math.max(max,ele);
+	    }
+		
+	}
+	
+public static int helper(int sum,int row,int col,int arr[][]){
+	    
+	    if(is_valid(row,col,arr)==false) return 0;
+	    sum = arr[row][col];
+	    arr[row][col] = -1*arr[row][col];
+	    int q = helper(sum,row,col+1,arr);
+	    int w = helper(sum,row,col-1,arr);
+	    int e = helper(sum,row+1,col,arr);
+	    int r = helper(sum,row-1,col,arr);
+	    return sum+q+w+e+r;
+	    
+	}
+	
+	
+	public static boolean is_valid(int r,int c,int arr[][]){
+	    int row = arr.length;
+	    int col = arr[0].length;
+	    if(r<0||r>row-1||c<0||c>col-1) return false;
+	    if(arr[r][c]==0) return false;
+	    if(arr[r][c]<0) return false;
+	    return true;
+	    
+	}
+	public static void main(String[] args) {
+		Scanner scn = new Scanner(System.in);
+		int n = scn.nextInt();
+		int m = scn.nextInt();
+		int[][] arr = new int[m][n];
+		for(int i = 0; i < arr.length; i++){
+			for(int j = 0 ; j  < arr[0].length; j++){
+				arr[i][j] = scn.nextInt();
+			}
+		}
+		getMaxGold(arr);
+		System.out.println(max);
+	}
+		
+}
