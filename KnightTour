@@ -1,0 +1,56 @@
+import java.io.*;
+import java.util.*;
+
+public class Main {
+
+    public static void main(String[] args) throws Exception {
+        
+        Scanner sc = new Scanner(System.in);
+        int n = sc.nextInt();
+        int row = sc.nextInt();
+        int col = sc.nextInt();
+        int chess[][] = new int[n][n];
+        printKnightsTour(chess,row,col,1);
+        
+    }
+    public static int[] mover = {-2,-1,1,2,2,1,-1,-2};
+    public static int[] movec = {1,2,2,1,-1,-2,-2,-1};
+
+    public static void printKnightsTour(int[][] chess, int r, int c, int upcomingMove) {
+        if(is_valid(chess,r,c)==false) return;
+        
+     
+            if(upcomingMove==chess.length*chess.length){
+                chess[r][c] = upcomingMove;
+                displayBoard(chess);
+                chess[r][c]=0;
+                return;
+                }
+          
+        chess[r][c] = upcomingMove;
+        for(int i=0;i<8;i++){
+            printKnightsTour(chess,r+mover[i],c+movec[i],upcomingMove+1);
+        }
+        chess[r][c] = 0;
+        return;
+       
+    }
+    public static boolean is_valid(int chess[][],int r,int c){
+        int row = chess.length-1;
+        int col = row;
+        if(r<0 ||r>row || c<0|| c>col) return false;
+        if(chess[r][c]!=0) return false;
+        return true;
+    }
+    
+    public static void displayBoard(int[][] chess){
+        for(int i = 0; i < chess.length; i++){
+            for(int j = 0; j < chess[0].length; j++){
+                System.out.print(chess[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+        System.out.println();
+    }
+}
