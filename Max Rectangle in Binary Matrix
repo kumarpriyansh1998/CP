@@ -1,0 +1,91 @@
+//https://www.interviewbit.com/problems/max-rectangle-in-binary-matrix/
+
+
+public class Solution {
+    public int maximalRectangle(int[][] A) {
+        
+        int n = A.length;
+        int col = A[0].length;
+        
+        int arr[] = new int[col];
+        int the_max = Integer.MIN_VALUE;
+        for(int i=0;i<A.length;i++){
+            
+            for(int j=0;j<col;j++){
+                if(A[i][j]==0) arr[j] =0;
+                else{
+                    arr[j] +=A[i][j];
+                }
+                
+            }
+           
+            int current_max = max_area_histogram(arr,col);
+            the_max = Math.max(the_max,current_max);
+        }
+        
+        
+        return the_max;
+    }
+    
+    public int max_area_histogram(int arr[],int n){
+        
+        int nsr[] = new int[n];
+        Arrays.fill(nsr,n);
+        Stack<node> stack = new Stack<>();
+        for(int i=n-1;i>=0;i--){
+            node temp = new node(arr[i],i);
+            if(stack.isEmpty()) stack.push(temp);
+            else if(arr[i]>stack.peek().data){
+                nsr[i] = stack.peek().index;
+                stack.push(temp);
+            }
+            else{
+                while(!stack.isEmpty() && stack.peek().data>=arr[i]){
+                    stack.pop();
+                }
+                if(!stack.isEmpty()) nsr[i] = stack.peek().index;
+                stack.push(temp);
+            }
+            
+        }
+        
+        int nsl[] = new int[n];
+        Arrays.fill(nsl,-1);
+        stack = new Stack<>();
+        for(int i=0;i<n;i++){
+            node temp = new node(arr[i],i);
+            if(stack.isEmpty()) stack.push(temp);
+            else if(arr[i]>stack.peek().data){
+                nsl[i] = stack.peek().index;
+                stack.push(temp);
+            }
+            else{
+                while(!stack.isEmpty() && stack.peek().data>=arr[i]){
+                    stack.pop();
+                }
+                if(!stack.isEmpty()) nsl[i] = stack.peek().index;
+                stack.push(temp);
+            }
+            
+        }
+        
+        // System.out.println(Arrays.toString(nsr));
+        //   System.out.println(Arrays.toString(nsl));
+        
+        int max = Integer.MIN_VALUE;
+        for(int i=0;i<n;i++){
+            max = Math.max(max,(nsr[i]-nsl[i]-1)*arr[i]);
+        }
+        return max;
+    
+    }
+    
+    public class node{
+        int data;
+        int index;
+        node(int data,int index){
+            this.data = data;
+            this.index = index;
+        }
+    }
+}
