@@ -1,0 +1,88 @@
+
+//https://www.pepcoding.com/resources/online-java-foundation/stacks-and-queues/lah-official/ojquestion
+import java.io.*;
+import java.util.*;
+
+public class Main{
+  
+
+public static void main(String[] args) throws Exception {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+    int n = Integer.parseInt(br.readLine());
+    int[] a = new int[n];
+    for(int i = 0; i < n; i++){
+       a[i] = Integer.parseInt(br.readLine());
+    }
+
+    // code
+    
+    int nsr[] = new int[n];
+    Arrays.fill(nsr,n);
+    Stack<node> stack = new Stack<>();
+    for(int i=n-1;i>=0;i--){
+        node temp = new node(a[i],i);
+        if(stack.isEmpty()) stack.push(temp);
+        else if(a[i]>stack.peek().data){
+            nsr[i] = stack.peek().index;
+            stack.push(temp);
+        }
+        else{
+            while(!stack.isEmpty() && a[i]<=stack.peek().data){
+                stack.pop();
+            }
+            if(!stack.isEmpty()){
+                nsr[i] = stack.peek().index;
+            }
+            stack.push(temp);
+        }
+    }
+    // System.out.println(Arrays.toString(nsr));
+    
+    int nsl[] = new int[n];
+    Arrays.fill(nsl,-1);
+    stack = new Stack<>();
+    for(int i=0;i<n;i++){
+        node temp = new node(a[i],i);
+        if(stack.isEmpty()) stack.push(temp);
+        else if(a[i]>stack.peek().data){
+            nsl[i] = stack.peek().index;
+            stack.push(temp);
+            }
+        else{
+            while(!stack.isEmpty() && stack.peek().data>=a[i]){
+                stack.pop();
+            }
+            if(!stack.isEmpty()){
+                nsl[i] = stack.peek().index;
+            }
+            stack.push(temp);
+        }
+    
+ }
+ 
+//  System.out.println(Arrays.toString(nsl));
+
+int max = Integer.MIN_VALUE;
+    for(int i=0;i<n;i++){
+        max = Math.max(max,(nsr[i]-nsl[i]-1)*a[i]);
+    }
+    System.out.println(max);
+        
+
+
+
+}
+
+public static class node{
+    
+    int data;
+    int index;
+    node(int data,int index){
+        this.data = data;
+        this.index = index;
+    }
+ 
+}
+ 
+}
