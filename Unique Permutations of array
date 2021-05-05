@@ -30,3 +30,63 @@ public class Solution {
         return A;
     }
 }
+
+
+/////////////////////////////////////////////////////////////////////My local machine code
+
+
+import java.util.*;
+
+public class NearestSmallerToLeft {
+	public static HashSet<ArrayList<Integer>> check = new HashSet<>();
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+		ArrayList<Integer> arr = new ArrayList<>(Arrays.asList(1,2,2,2,1));
+		
+		int left = 0;
+		int right = arr.size()-1;
+		ArrayList<ArrayList<Integer>> answer = new ArrayList<>();
+		permute(arr,left,right,answer);
+		for(ArrayList<Integer> ele:answer) {
+			System.out.println(ele);
+		}
+
+	}
+
+	public static void permute(ArrayList<Integer> arr,int left,int right,ArrayList<ArrayList<Integer>> answer) {
+		if(left==right) {
+			if(!check.contains(arr)) {
+				check.add(arr);
+				answer.add(new ArrayList<>(arr));
+			}
+			
+			
+			return;
+		}
+		for(int i=left;i<=right;i++) {
+			
+			arr = swap(arr,i,left);
+			permute(arr,left+1,right,answer);
+			arr = swap(arr,i,left);
+			
+		}
+	}
+	public static ArrayList<Integer> swap(ArrayList<Integer> arr,int left,int right) {
+
+		int temp = arr.get(left);
+		arr.set(left, arr.get(right));
+		arr.set(right, temp);
+		return arr;
+		
+	}
+	
+
+
+	
+
+
+	
+  
+
+}
