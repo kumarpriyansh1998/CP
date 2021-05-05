@@ -1,0 +1,32 @@
+public class Solution {
+    public ArrayList<ArrayList<Integer>> permute(ArrayList<Integer> A) {
+        ArrayList<ArrayList<Integer>> answer = new ArrayList<>();
+        int left = 0;
+        int right = A.size()-1;
+        helper(A,left,right,answer);
+        return answer;
+    }
+    public HashSet<ArrayList<Integer>> check = new HashSet<>();
+    public void helper(ArrayList<Integer> A,int left,int right,ArrayList<ArrayList<Integer>> answer){
+        if(left==right){
+            if(!check.contains(A)){
+                check.add(A);
+                answer.add(new ArrayList<>(A));
+            }
+            return ;
+        }
+        
+        for(int i=left;i<=right;i++){
+            A = swap(A,left,i);
+            helper(A,left+1,right,answer);
+            A =swap(A,left,i);
+        }
+        return;
+    }
+    public ArrayList<Integer> swap(ArrayList<Integer> A,int left,int i){
+        int temp = A.get(left);
+        A.set(left,A.get(i));
+        A.set(i,temp);
+        return A;
+    }
+}
