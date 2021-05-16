@@ -1,0 +1,434 @@
+
+
+
+
+//                                                     Generic Tree Used 
+//                                                             10
+//                                                            / | \
+//                                                           /  |  \
+//                                                          /   |   \
+//                                                         /    |    \
+//                                                        /     |     \
+//														                           /      |      \
+//                                                     20       30      40
+//												                            / \      /|\        \
+//                                                   /   \    / | \        100
+//												                         50    60  70 80 90
+//																                              /\		
+//															                               /  \
+//                                                           110   120
+
+
+
+package GenericTree;
+import java.util.*;
+
+public class GenereicTreeConstructor {
+	static class Node{
+		int data;
+		ArrayList<Node> child = new ArrayList<>();
+		Node(int data){
+			this.data = data;
+		}
+	}
+	
+	
+	public static Node construct(Node root,int arr[]) {
+		Stack<Node> stack = new Stack<>();
+		for(int i=0;i<arr.length;i++) {
+			if(arr[i]==-1) {
+				stack.pop();
+			}
+			else {
+				Node curr = new Node(arr[i]);
+				if(stack.size()==0) {
+					root = curr;
+				}
+				else {
+					Node temp = stack.peek();
+					temp.child.add(curr);
+				}
+				stack.push(curr);
+			}
+		}
+		return root;
+	}
+	
+	
+	
+	public static void display_tree(Node root) {
+		String str= root.data+"-> ";
+		for(Node ele:root.child) {
+			str+=ele.data+" , ";
+		}
+		str+=".";
+		System.out.println(str);
+		for(Node ele:root.child) {
+			display_tree(ele);
+		}
+		
+		
+	}
+	
+
+	
+	public static int find_size(Node root) {
+		if(root.child.size()==0) return 1;
+		int s =0;
+		for(Node ele:root.child) {
+			s+=find_size(ele);
+		}
+		return s+1;
+	}
+	
+	
+	public static int find_max(Node root) {
+		if(root.child.size()==0) return root.data;
+		int m = Integer.MIN_VALUE;
+		for(Node ele:root.child) {
+			m = Math.max(find_max(ele), m);
+		}
+		return Math.max(m, root.data);
+	}
+	
+	public static void level_order(Node root) {
+		Queue<Node> queue = new ArrayDeque<>();
+		queue.add(root);
+		while(queue.size()>0) {
+			Node current = queue.remove();
+			System.out.print(current.data+" ");
+			for(Node ele:current.child) {
+				queue.add(ele);
+			}
+			
+		}
+		return;
+		
+	}
+	
+	public static int height(Node root) {
+		if(root.child.size()==0) {
+			return 0;
+		}
+		int h =-1;
+		for(Node ele:root.child) {
+			h = Math.max(h, height(ele));
+		}
+		return h+1;
+	}
+	
+	public static void mirror_tree(Node root) {
+		Queue<Node> queue = new ArrayDeque<>();
+		queue.add(root);
+		while(queue.size()>0) {
+			Node curr =queue.remove();
+			for(Node ele:curr.child) {
+				queue.add(ele);
+				int i=0;
+				int j=curr.child.size()-1;
+				while(i<j) {
+					swap(curr.child,i,j);
+					i++;
+					j--;
+				}
+				
+			}
+		}
+	}
+	
+	
+	public static void swap(ArrayList<Node> list,int i,int j) {
+		Node temp = list.get(i);
+		list.set(i, list.get(j));
+		list.set(j, temp);
+		return;
+	}
+	
+	
+	public static void remove_leaves(Node root) {
+		for(int i=root.child.size()-1;i>=0;i--) {
+			Node curr = root.child.get(i);
+			if(curr.child.size()==0) root.child.remove(i);
+		}
+		for(Node ele:root.child) {
+			remove_leaves(ele);
+		}
+	}
+	
+	public static void linearize_tree(Node root) {
+		for(Node ele:root.child) {
+			linearize_tree(ele);
+		}
+		
+		while(root.child.size()>1) {
+			Node head = root.child.remove(root.child.size()-1);
+			Node tail = get_tail(root.child.get(root.child.size()-1));
+			tail.child.add(head);
+		}
+	}
+	
+	
+	public static Node get_tail(Node node) {
+		if(node.child.size()==0) return node;
+		return get_tail(node.child.get(0));
+	}
+	
+	
+	
+	public static boolean find_node(Node node,int val) {
+		if(node.data == val) return true;
+		for(Node ele:node.child) {
+			boolean answer = find_node(ele,val);
+			if(answer==true) return true;
+		}
+		
+		return false;
+	}
+	
+	public static ArrayList<Integer> print_path(Node root,int val){
+		
+		if(root.data == val) {
+			ArrayList<Integer> answer = new ArrayList<>();
+			answer.add(root.data);
+			return answer;
+		}
+		
+		for(Node ele:root.child) {
+			ArrayList<Integer> temp = print_path(ele,val);
+			if(temp.size()>0) {
+				temp.add(root.data);
+				return temp;
+			}
+		}
+		return new ArrayList<Integer>();
+		
+	}
+	
+	public static int LowestCommonAncestor(Node root,int d1,int d2) {
+		ArrayList<Integer> a1 = print_path(root,d1);
+		ArrayList<Integer> a2 = print_path(root,d2);
+		Collections.reverse(a1);
+		Collections.reverse(a2);
+		int prev =-1;
+		for(int i=0;i<a1.size() && i<a2.size();i++) {
+			if(a1.get(i)==a2.get(i)) {
+				prev = a1.get(i);
+				
+			}
+		}
+		return prev;
+	}
+	
+	public static int distance(Node root,int d1,int d2) {
+		ArrayList<Integer> a1 = print_path(root,d1);
+		ArrayList<Integer> a2 = print_path(root,d2);
+		int i=a1.size()-1;
+		int j = a2.size()-1;
+		while(i>=0 && j>=0 && a1.get(i)==a2.get(j)) {
+			i--;
+			j--;
+		}
+		
+		return i+j+2;
+		
+	}
+	
+	public static int max = Integer.MIN_VALUE;
+	public static int height = 0;
+	public static int size = 0;
+	public static int min = Integer.MAX_VALUE;
+	
+	public static void multisolver(Node root,int depth) {
+		max = Math.max(root.data, max);
+		min = Math.min(min, root.data);
+		size++;
+		height = Math.max(height, depth);
+		for(Node ele:root.child) {
+			multisolver(ele,depth+1);
+		}
+		
+	}
+	
+	public static int ceil;
+	public static int floor;
+	
+	public static void ceil_floor(Node root,int val) {
+		
+		if(root.data>val) {
+			ceil = Math.min(ceil, root.data);
+		}
+		if(root.data<val) {
+			floor = Math.max(floor, root.data);
+		}
+		
+		for(Node ele:root.child) {
+			ceil_floor(ele,val);
+		}
+		
+		
+		
+		
+		
+	}
+	
+	
+	public static int KthLargest(Node root,int k) {
+		ceil = Integer.MAX_VALUE;
+		floor = Integer.MIN_VALUE;
+		int temp = ceil;
+		for(int i=0;i<k;i++) {
+			ceil_floor(root,temp);
+			temp = floor;
+			floor = Integer.MIN_VALUE;
+		}
+		
+		return temp;
+		
+	}
+	
+	
+	static int max_node = -1;
+	static int max_sum  = Integer.MIN_VALUE;
+	public static int max_sum_subtree(Node root) {
+		if(root.child.size()==0) return root.data;
+		int cur_sum =0;
+		for(Node ele:root.child) {
+			int s = max_sum_subtree(ele);
+			cur_sum+=s;
+		}
+		cur_sum+=root.data;
+		if(cur_sum>max_sum) {
+			max_sum = cur_sum;
+			max_node = root.data;
+		}
+		return cur_sum;
+		
+	}
+	
+	
+	public static class pair{
+		Node node;
+		int state;
+		pair(Node node,int state){
+			this.node = node;
+			this.state = state;
+		}
+	}
+	public static void iterative_pre_post_order(Node root) {
+		ArrayList<Integer> preorder = new ArrayList<>();
+		ArrayList<Integer> postorder = new ArrayList<>();
+		Stack<pair> stack = new Stack<>();
+		stack.add(new pair(root,-1));
+		while(stack.size()>0) {
+			pair top = stack.peek();
+			
+			if(top.state ==-1) {
+				preorder.add(top.node.data);
+				top.state++;
+			}
+			else if(top.state<top.node.child.size()) {
+				stack.push(new pair(top.node.child.get(top.state),-1));
+				top.state++;
+			}
+			else {
+				postorder.add(top.node.data);
+				stack.pop();
+			}
+		}
+		
+		System.out.println("PreOrder "+preorder);
+		System.out.println("PostOrder "+postorder);
+		
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+	  public static int max_dia =0;
+	  public static int diameter(Node root){
+	      int mic_first =-1;
+	      int mic_sec =-1;
+	    //   int cur_sum =0;
+	      for(Node ele:root.child){
+	          int cur_sum = diameter(ele);
+	          if(cur_sum>mic_first){
+	              mic_sec = mic_first;
+	              mic_first = cur_sum;
+	          }
+	          else{
+	              if(cur_sum>mic_sec){
+	                  mic_sec = cur_sum;
+	              }
+	          }
+	      }
+	      max_dia = Math.max(max_dia,mic_first+mic_sec+2);
+	      return 1+mic_first;
+	      
+	  }
+	
+	  
+	public static void main(String args[]) {
+		int arr[] = {10,20,50,-1,60,-1,-1,30,70,-1,80,110,-1,-1200,-1,-1,90,-1,-1,40,100,-1,-1,-1};
+		Node root=null;
+		root = construct(root,arr);
+	
+//		display_tree(root);
+//		System.out.println(find_size(root));
+//		System.out.println(find_max(root));
+//		System.out.println(height(root));
+//		level_order(root);
+//		mirror_tree(root);
+//		remove_leaves(root);
+//		linearize_tree(root);
+//		System.out.println(find_node(root,50));
+//		System.out.println(print_path(root,120));
+//		System.out.println(LowestCommonAncestor(root,120,80));
+//		System.out.println(distance(root,90,120));
+		
+		
+		
+//		multisolver(root,0);
+//		System.out.println("min "+ min);
+//		System.out.println("max " +max);
+//		System.out.println("height "+height);
+//		System.out.println("Size " +size);
+		
+		
+		
+//		diameter(root);
+//		System.out.println(max_dia);
+		
+		
+//		ceil = Integer.MAX_VALUE;
+//		floor = Integer.MIN_VALUE;
+//		ceil_floor(root,100);
+//		System.out.println(ceil);
+//		System.out.println(floor);
+		
+		
+		
+//		 max_sum_subtree(root);
+//		 System.out.println("max subtree is rooted at "+max_node+" with sum "+max_sum);
+		
+		
+//		int kth_largest = KthLargest(root,12);
+//		System.out.println(kth_largest);
+//		
+			
+//		iterative_pre_post_order(root);
+		
+		
+		
+	
+
+	}
+
+}
+
+
+
+//...happy coding :p
