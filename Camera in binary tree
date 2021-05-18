@@ -15,6 +15,11 @@
  *     }
  * }
  */
+ 
+ // I am a camera :1
+ //I am not the camera but i need one:0
+ //I am not the camera but i dont need it: -1
+ 
 class Solution {
     
     public int minCameraCover(TreeNode root) {
