@@ -1,0 +1,118 @@
+import java.util.*;
+
+public class Main {
+    public static Scanner scn = new Scanner(System.in);
+
+    public static class TreeNode {
+        int val = 0;
+        TreeNode left = null;
+        TreeNode right = null;
+
+        TreeNode(int val) {
+            this.val = val;
+        }
+    }
+    
+    
+    
+    
+    
+    
+    public static class pair{
+        int order;
+        TreeNode node;
+        pair(TreeNode node,int order){
+            this.node = node;
+            this.order = order;
+        }
+    }
+    
+    public static int min_index =1;
+
+    public static ArrayList<ArrayList<Integer>> verticalOrderTraversal(TreeNode root) {
+        HashMap<Integer,ArrayList<Integer>> hmap = new HashMap<>();
+        Queue<pair> queue = new ArrayDeque<>();
+        queue.add(new pair(root,0));
+        while(queue.size()>0){
+            int n = queue.size();
+            for(int i=0;i<n;i++){
+                pair curr = queue.remove();
+                min_index = Math.min(min_index,curr.order);
+                if(hmap.containsKey(curr.order)){
+                    ArrayList<Integer> t = hmap.get(curr.order);
+                    t.add(curr.node.val);
+                    hmap.put(curr.order,t);
+                }
+                else{
+                    ArrayList<Integer> p = new ArrayList<>();
+                    p.add(curr.node.val);
+                    hmap.put(curr.order,p);
+                }
+                
+                if(curr.node.left!=null){
+                    queue.add(new pair(curr.node.left,curr.order-1));
+                }
+                if(curr.node.right!=null){
+                     queue.add(new pair(curr.node.right,curr.order+1));
+                }
+                
+                
+                
+            }
+        }
+        
+        
+        // System.out.println(hmap.toString());
+        
+        ArrayList<ArrayList<Integer>> answer = new ArrayList<>();
+        while(true){
+            if(hmap.containsKey(min_index)==false) break;
+            ArrayList<Integer> to_add = hmap.get(min_index);
+            answer.add(to_add);
+            min_index++;
+        }
+        
+        return answer;
+        
+        
+        
+
+    }
+
+    // input_section=================================================
+
+    public static TreeNode createTree(int[] arr, int[] IDX) {
+        if (IDX[0] > arr.length || arr[IDX[0]] == -1) {
+            IDX[0]++;
+            return null;
+        }
+        TreeNode node = new TreeNode(arr[IDX[0]++]);
+        node.left = createTree(arr, IDX);
+        node.right = createTree(arr, IDX);
+
+        return node;
+    }
+
+    public static void solve() {
+        int n = scn.nextInt();
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++)
+            arr[i] = scn.nextInt();
+
+        int[] IDX = new int[1];
+        TreeNode root = createTree(arr, IDX);
+
+        ArrayList<ArrayList<Integer>> ans = verticalOrderTraversal(root);
+        int idx = 0;
+        for (ArrayList<Integer> i : ans) {
+            System.out.print(idx++ + " -> ");
+            for (Integer j : i)
+                System.out.print(j + " ");
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args) {
+        solve();
+    }
+}
