@@ -38,16 +38,8 @@ public class Main {
             for(int i=0;i<n;i++){
                 pair curr = queue.remove();
                 min_index = Math.min(min_index,curr.order);
-                if(hmap.containsKey(curr.order)){
-                    ArrayList<Integer> t = hmap.get(curr.order);
-                    t.add(curr.node.val);
-                    hmap.put(curr.order,t);
-                }
-                else{
-                    ArrayList<Integer> p = new ArrayList<>();
-                    p.add(curr.node.val);
-                    hmap.put(curr.order,p);
-                }
+                hmap.putIfAbsent(curr.order,new ArrayList<Integer>());
+                hmap.get(curr.order).add(curr.node.val);
                 
                 if(curr.node.left!=null){
                     queue.add(new pair(curr.node.left,curr.order-1));
@@ -55,8 +47,6 @@ public class Main {
                 if(curr.node.right!=null){
                      queue.add(new pair(curr.node.right,curr.order+1));
                 }
-                
-                
                 
             }
         }
