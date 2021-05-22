@@ -1,0 +1,59 @@
+//https://leetcode.com/problems/linked-list-in-binary-tree/submissions/
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    public boolean isSubPath(ListNode head, TreeNode root) {
+        if(head==null) return true;
+        if(root==null) return false;
+     
+        if(head.val==root.val){
+            boolean c = BFS(head,root);
+            if(c==true) return c;
+        }
+        boolean l = isSubPath(head,root.left);
+        boolean r = isSubPath(head,root.right);
+        return l||r;
+
+    }
+    
+    public boolean BFS(ListNode head,TreeNode root){
+        if(head==null) return true;
+        if(root==null) return false;
+        if(head.val!=root.val) return false;
+        boolean l = BFS(head.next,root.left);
+        boolean r = BFS(head.next,root.right);
+        return l||r;
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+}
